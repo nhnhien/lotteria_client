@@ -13,12 +13,12 @@ import { matchPath } from 'react-router-dom';
 const isOrderPage = matchPath('/admin/order/:id', location.pathname);
 
 const menuItems = [
-  {
-    key: 'dashboard',
-    icon: <AppstoreOutlined />,
-    label: 'Dashboard',
-    index: true,
-  },
+  // {
+  //   key: 'dashboard',
+  //   icon: <AppstoreOutlined />,
+  //   label: 'Dashboard',
+  //   index: true,
+  // },
   {
     key: 'product',
     icon: <UnorderedListOutlined />,
@@ -30,12 +30,12 @@ const menuItems = [
         path: '/admin/product',
         icon: <ContainerOutlined />,
       },
-      {
-        key: 'create-product',
-        label: 'Create Product',
-        path: '/admin/product/create',
-        icon: <ShoppingCartOutlined />,
-      },
+      // {
+      //   key: 'create-product',
+      //   label: 'Create Product',
+      //   path: '/admin/product/create',
+      //   icon: <ShoppingCartOutlined />,
+      // },
     ],
   },
   {
@@ -49,12 +49,12 @@ const menuItems = [
         path: '/admin/users',
         icon: <UserOutlined />,
       },
-      {
-        key: 'create-user',
-        label: 'Create User',
-        path: '/admin/users/create',
-        icon: <UserOutlined />,
-      },
+      // {
+      //   key: 'create-user',
+      //   label: 'Create User',
+      //   path: '/admin/users/create',
+      //   icon: <UserOutlined />,
+      // },
     ],
   },
   {
@@ -73,22 +73,22 @@ const menuItems = [
     ],
   },
   {
-    key: 'collection',
+    key: 'category',
     icon: <GiftOutlined />,
-    label: 'Collections',
+    label: 'Categories',
     children: [
       {
-        key: 'manage-collection',
-        label: 'Manage Collections',
+        key: 'manage-category',
+        label: 'Manage Category',
         path: '/admin/category',
         icon: <ContainerOutlined />,
       },
-      {
-        key: 'create-collection',
-        label: 'Create Collection',
-        path: '/admin/category/create',
-        icon: <ContainerOutlined />,
-      },
+      // {
+      //   key: 'create-collection',
+      //   label: 'Create Collection',
+      //   path: '/admin/category/create',
+      //   icon: <ContainerOutlined />,
+      // },
     ],
   },
   {
@@ -103,20 +103,20 @@ const menuItems = [
         path: '/admin/discounts',
         icon: <TagOutlined />,
       },
-      {
-        key: 'create-discount',
-        label: 'Create Discount',
-        path: '/admin/discounts/create',
-        icon: <TagOutlined />,
-      },
+      // {
+      //   key: 'create-discount',
+      //   label: 'Create Discount',
+      //   path: '/admin/discounts/create',
+      //   icon: <TagOutlined />,
+      // },
     ],
   },
-  {
-    key: 'setting',
-    icon: <SettingOutlined />,
-    label: 'Settings',
-    path: '/admin/settings',
-  },
+  // {
+  //   key: 'setting',
+  //   icon: <SettingOutlined />,
+  //   label: 'Settings',
+  //   path: '/admin/settings',
+  // },
 ];
 
 export { menuItems };

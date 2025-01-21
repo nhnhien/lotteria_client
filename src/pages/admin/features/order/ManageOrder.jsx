@@ -57,7 +57,10 @@ const ManageOrder = () => {
   const handleViewDetail = (id) => {
     navigate(`/admin/order/${id}`);
   };
-
+  const convertToUSD = (amountVND, exchangeRate = 25000) => {
+    return (amountVND / exchangeRate).toFixed(2);
+  };
+  
   const columns = [
     {
       title: 'Order ID',
@@ -88,7 +91,9 @@ const ManageOrder = () => {
       title: 'Total Value',
       dataIndex: 'total_price',
       key: 'total_price',
-      render: (price) => <div>{formatCurrencyVND(price)}</div>,
+      // render: (price) => <div>{formatCurrencyVND(price)}</div>,
+      render: (price) => <div>${convertToUSD(price)} USD</div>
+
     },
     {
       title: 'Payment Status',
@@ -135,14 +140,14 @@ const ManageOrder = () => {
       key: 'actions',
       render: (_, record) => (
         <Space size='middle'>
-          <Button
+          {/* <Button
             type='link'
             icon={<EditOutlined />}
             className='text-blue-500'
             onClick={() => handleEdit(record)}
           >
             Edit
-          </Button>
+          </Button> */}
           <Button
             type='link'
             icon={<EyeOutlined />}
@@ -157,13 +162,13 @@ const ManageOrder = () => {
             okText='Yes'
             cancelText='No'
           >
-            <Button
+            {/* <Button
               type='link'
               icon={<DeleteOutlined />}
               className='text-red-500'
             >
               Delete
-            </Button>
+            </Button> */}
           </Popconfirm>
         </Space>
       ),

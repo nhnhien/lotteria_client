@@ -28,13 +28,13 @@ const CartDiscount = () => {
       dispatch(updateCart(applyDiscountRes.data));
       message.info(applyDiscountRes.message);
     } else {
-      message.error('Mã giảm giá không hợp lệ.');
+      message.error('Invalid discount code.');
     }
   };
 
   const handleRemoveDiscount = () => {
     dispatch(removeDiscount());
-    message.info('Mã giảm giá đã bị xóa.');
+    message.info('The discount code has been deleted.');
   };
 
   return (
@@ -43,7 +43,7 @@ const CartDiscount = () => {
         <div className='flex'>
           <Input
             size='large'
-            placeholder='Nhập mã giảm giá'
+            placeholder='Enter discount code'
             className='w-[200px]'
             onBlur={(e) => handleApplyDiscount(e.target.value)}
           />
@@ -52,7 +52,7 @@ const CartDiscount = () => {
             className='ml-2'
             onClick={() => handleApplyDiscount(discountCode)}
           >
-            Áp dụng
+            Apply
           </Button>
         </div>
       ) : (

@@ -3,6 +3,7 @@ import { Layout, Popover, Space, Button, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import logo from '../../../../assets/images/quickchicken_logo.png';
 
 const { Header } = Layout;
 
@@ -25,8 +26,8 @@ const HeaderAdmin = () => {
       <div className='flex items-center'>
         <NavLink to='/' className='text-xl font-bold text-white'>
           <img
-            src='https://www.lotteria.vn/grs-static/images/logo-l.svg'
-            alt='Lotteria Logo'
+            src={logo} 
+            alt='QuickChicken Logo'
             width='70px'
           />
         </NavLink>

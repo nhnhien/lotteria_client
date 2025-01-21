@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../../assets/images/lotteria_logo.png';
+import logo from '../../assets/images/quickchicken_logo.png';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Button, Select, Dropdown, Space, Popconfirm, Badge } from 'antd';
 import {
@@ -12,10 +12,11 @@ import { openModal } from '../../redux/slice/modal';
 import { ModalTypes } from '../../constant/modal';
 import { DownOutlined } from '@ant-design/icons';
 import { logoutSuccess } from '../../redux/slice/auth';
-import { clearCart, selectCartTotalQuantity } from '../../redux/slice/cart';
+import { clearCart, selectCartItems, selectCartTotalQuantity } from '../../redux/slice/cart';
 
 const Header = () => {
   const totalQuantityCart = useSelector(selectCartTotalQuantity);
+  const cartItems = useSelector(selectCartItems)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isLoggedIn } = useSelector((state) => state.auth);
@@ -70,17 +71,40 @@ const Header = () => {
           </Link>
           <nav className='hidden md:flex space-x-6 ml-16'>
             {navigateItems.map((item) => (
-              <div key={item.id}>
-                <NavLink to={item.link}>
-                  <p className='font-medium'>{item.title}</p>
+              // <div key={item.id}>
+              //   <NavLink to={item.link}>
+              //     <p className='font-medium'>{item.title}</p>
+              //   </NavLink>
+              // </div>
+                            <div
+                key={item.id}
+                className="group relative p-3 rounded-lg bg-white hover:bg-pink-50 transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200"
+              >
+                <NavLink
+                  to={item.link}
+                  className="flex items-center space-x-3"
+                  style={{ textDecoration: "none" }}
+                >
+                  {/* Icon bên trái */}
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center group-hover:bg-pink-200 transition-all duration-300">
+                    <i className="fas fa-link text-pink-600 group-hover:text-pink-800"></i>
+                  </div>
+
+                  {/* Nội dung tiêu đề */}
+                  <p className="font-semibold text-gray-800 text-md group-hover:text-pink-700 transition-all duration-300">
+                    {item.title}
+                  </p>
                 </NavLink>
               </div>
+
+            
+
             ))}
           </nav>
         </div>
         <div>
           <div className='flex space-x-3'>
-            <Select
+            {/* <Select
               style={{ width: 120 }}
               defaultValue='vn'
               onChange={handleChange}
@@ -103,22 +127,7 @@ const Header = () => {
                   <span>English</span>
                 </div>
               </Select.Option>
-            </Select>
-            <div>
-              <Button
-                iconPosition='start'
-                icon={
-                  <img
-                    src='https://www.lotteria.vn/grs-static/images/logo-l.svg'
-                    alt=''
-                  />
-                }
-                type='text'
-                className='bg-red-500 text-white'
-              >
-                Download App
-              </Button>
-            </div>
+            </Select> */}
           </div>
           <div className='flex space-x-4 mt-4 justify-between'>
             {accountMenu.map((item) => {
@@ -147,13 +156,13 @@ const Header = () => {
                         }}
                       >
                         <Space>
-                          Xin chào, {currentUser.username}
+                          Hello, {currentUser.username}
                           <DownOutlined />
                         </Space>
                       </div>
                     </Dropdown>
                     <Popconfirm
-                      title='Bạn có chắc chắn muốn đăng xuất không'
+                      title='Are you sure you want to log out?'
                       open={open}
                       onConfirm={handleOk}
                       okButtonProps={{
@@ -178,7 +187,7 @@ const Header = () => {
                     <img src={item.link} alt='' />
                     {item.id === 4 && (
                       <div className='absolute -right-5 -top-2'>
-                        <Badge count={totalQuantityCart} />
+                        <Badge count={cartItems.length} />
                       </div>
                     )}
                   </div>

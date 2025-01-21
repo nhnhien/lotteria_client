@@ -3,9 +3,12 @@ import { useParams } from 'react-router-dom';
 import { getProductById } from '../../../service/product';
 import { Button, InputNumber, Skeleton, Row, Col, Card } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { formatCurrencyVND } from '../../../util/format';
+import { formatCurrencyUSD, formatCurrencyVND } from '../../../util/format';
+import { useDispatch } from 'react-redux';
+import { addItemToCart } from '../../../redux/slice/cart';
 
 const ProductMain = () => {
+  const dispatch = useDispatch()
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +30,9 @@ const ProductMain = () => {
   const handleQuantityChange = (value) => {
     setQuantity(value);
   };
-
+  const handleClick = () => {
+    dispatch(addItemToCart({...product, quantity: quantity}))
+  };
   if (loading) {
     return (
       <div className='max-w-screen-xl mx-auto p-4'>
@@ -35,6 +40,15 @@ const ProductMain = () => {
       </div>
     );
   }
+
+  const groupedOptions = product.productOptions.reduce((acc, productOption) => {
+    const optionName = productOption.option.name;
+    if (!acc[optionName]) {
+      acc[optionName] = [];
+    }
+    acc[optionName].push(productOption);
+    return acc;
+  }, {});
 
   return (
     <div className='container mx-auto my-[100px]'>
@@ -56,11 +70,14 @@ const ProductMain = () => {
               {product.description}
             </div>
             <div className='mt-4 text-xl font-semibold text-red-600'>
-              {formatCurrencyVND(product.price)} VND
+              {formatCurrencyUSD(product.price)}
             </div>
             <div className='pt-10'>
+            <div className='mb-2 text-sm font-semibold text-gray-700'>
+               Remaining {product.stock}
+              </div>
               <div className='mb-2 text-sm font-semibold text-gray-700'>
-                Số lượng
+              Quantity
               </div>
               <div className='inline-flex items-center space-x-2'>
                 <Button
@@ -94,25 +111,9 @@ const ProductMain = () => {
                 type='primary'
                 size='large'
                 className='w-full bg-red-500 hover:bg-red-600 text-white mt-12'
-                onClick={() => {
-                  console.log(
-                    `Added ${quantity} item(s) of ${product.name} to the cart`,
-                  );
-                }}
+                onClick={handleClick}
               >
-                Thêm vào giỏ hàng
-              </Button>
-              <Button
-                type='primary'
-                size='large'
-                className='w-full mt-5'
-                onClick={() => {
-                  console.log(
-                    `Added ${quantity} item(s) of ${product.name} to the cart`,
-                  );
-                }}
-              >
-                Mua Ngay
+                Add to cart
               </Button>
             </div>
           </Card>

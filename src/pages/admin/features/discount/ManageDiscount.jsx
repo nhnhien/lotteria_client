@@ -162,7 +162,7 @@ const ManageDiscount = () => {
                 <div>
                   <strong>{product.product.name}</strong>
                 </div>
-                <div>Price: {product.product.price.toLocaleString()} VND</div>
+                <div>Price: {product.product.price.toLocaleString()}$</div>
               </div>
             </div>
           ))}
@@ -201,13 +201,13 @@ const ManageDiscount = () => {
             okText='Yes'
             cancelText='No'
           >
-            <Button
+            {/* <Button
               type='link'
               icon={<DeleteOutlined />}
               className='text-red-500'
             >
               Delete
-            </Button>
+            </Button> */}
           </Popconfirm>
         </Space>
       ),
@@ -229,7 +229,7 @@ const ManageDiscount = () => {
             dispatch(
               openModal({
                 name: ModalTypes.DISCOUNT,
-                content: {},
+                content: null,
               }),
             )
           }

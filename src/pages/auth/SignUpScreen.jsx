@@ -6,7 +6,7 @@ import { closeModal, openModal } from '../../redux/slice/modal';
 import { FaTimes } from 'react-icons/fa';
 import { signUp } from '../../service/auth';
 import { loginSuccess } from '../../redux/slice/auth';
-
+import logo from '../../assets/images/quickchicken_logo.png';
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -29,8 +29,8 @@ const SignUpScreen = () => {
       if (result && result.success) {
         console.log('result', result);
         notification.success({
-          message: 'Đăng ký thành công',
-          description: 'Bạn đã đăng ký tài khoản thành công!',
+          message: 'Registration successful',
+          description: '"You have successfully registered an account!',
         });
         dispatch(closeModal({ name: ModalTypes.SIGN_UP }));
         dispatch(openModal({ name: ModalTypes.SIGN_IN }));
@@ -38,9 +38,9 @@ const SignUpScreen = () => {
     } catch (error) {
       console.log(error?.response);
       const messageError = error?.response?.data?.message || '';
-      console.error('Lỗi đăng ký:', messageError);
+      console.error('Registration error:', messageError);
       notification.error({
-        message: 'Đăng ký thất bại',
+        message: 'Registration failed',
         description: messageError,
       });
     }
@@ -59,17 +59,17 @@ const SignUpScreen = () => {
       >
         <div className='grid grid-cols-2 gap-3'>
           <div className='p-5'>
-            <h2 className='text-2xl font-bold text-center mb-6'>Đăng Ký</h2>
+            <h2 className='text-2xl font-bold text-center mb-6'>Sign up</h2>
             <div>
               <div className='mb-4'>
                 <label
                   htmlFor='fullName'
                   className='text-base block text-gray-700'
                 >
-                  Họ và tên
+                  Full name
                 </label>
                 <Input
-                  placeholder='Nhập họ và tên'
+                  placeholder='Enter full name'
                   className='focus:border-footer-second hover:border-footer-second h-10 mt-2 border-gray-300 border-2'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -80,10 +80,10 @@ const SignUpScreen = () => {
                   htmlFor='phone'
                   className='text-base block text-gray-700'
                 >
-                  Số điện thoại
+                  Phone number
                 </label>
                 <Input
-                  placeholder='Nhập số điện thoại'
+                  placeholder='Enter phone number'
                   className='focus:border-footer-second hover:border-footer-second h-10 mt-2 border-gray-300 border-2'
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -97,7 +97,7 @@ const SignUpScreen = () => {
                   Email
                 </label>
                 <Input
-                  placeholder='Nhập số điện thoại/email'
+                  placeholder='Enter phone number/email'
                   className='focus:border-footer-second hover:border-footer-second h-10 mt-2 border-gray-300 border-2'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -108,10 +108,10 @@ const SignUpScreen = () => {
                   htmlFor='password'
                   className='text-base block text-gray-700'
                 >
-                  Mật khẩu
+                 Password
                 </label>
                 <Input
-                  placeholder='Nhập mật khẩu'
+                  placeholder='Enter password'
                   type='password'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -124,7 +124,7 @@ const SignUpScreen = () => {
               onClick={handleSignUp}
               className='w-full bg-red-500 text-white p-2 rounded-lg mt-4 hover:bg-red-600'
             >
-              Đăng ký
+              Sign up
             </button>
             <div className='text-center mt-4'>
               <p
@@ -136,18 +136,21 @@ const SignUpScreen = () => {
                   );
                 }}
               >
-                Đã có tài khoản? Đăng nhập
+                Already have an account? Log in
               </p>
             </div>
           </div>
-          <div className='rounded-r-lg'>
-            <img
-              src='https://www.lotteria.vn/grs-static/images/login-banner.jpg'
-              alt=''
-              width='100%'
-              className='rounded-r-lg'
-            />
-          </div>
+          <div className='rounded-r-lg flex justify-center items-center'>
+  <img
+    src={logo}
+    alt='QuickChicken Logo'
+    className='w-full max-w-md lg:max-w-lg' 
+  />
+</div>
+
+
+
+
         </div>
       </Modal>
     </div>

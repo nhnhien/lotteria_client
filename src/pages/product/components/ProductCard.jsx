@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Card, message, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { formatCurrencyVND } from '../../../util/format';
+import { formatCurrencyUSD } from '../../../util/format';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '../../../redux/slice/cart';
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     dispatch(addItemToCart(product));
-    message.success('Đã thêm sản phẩm vào giỏ hàng');
+    message.success('Product has been added to your cart');
     console.log(123);
   };
 
@@ -45,10 +45,10 @@ const ProductCard = ({ product }) => {
               <div>{product.category.name}</div>
               <div className='flex items-center justify-between'>
                 <div className='mt-1 text-lg font-semibold text-red-600'>
-                  {formatCurrencyVND(product.price)} VND
+                  {formatCurrencyUSD(product.price)}
                 </div>
                 <div className='mt-2'>
-                  <Tooltip title='Thêm vào giỏ hàng'>
+                  <Tooltip title='Add to cart'>
                     <Button
                       icon={<PlusOutlined />}
                       onClick={(e) => handleAddToCart(e, product)}

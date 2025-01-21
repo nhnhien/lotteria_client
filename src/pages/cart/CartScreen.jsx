@@ -14,13 +14,13 @@ const CartScreen = () => {
       <div className='bg-pink-50'>
         <div className='col-span-12 flex flex-col items-center justify-center text-center py-10 h-[60vh]'>
           <Empty
-            description='Giỏ hàng của bạn hiện tại đang trống'
+            description='Your cart is currently empty.'
             image={emptyCartImage}
             imageStyle={{ height: 250 }}
           />
           <Link to='/'>
             <Button size='large' type='primary' className='mt-4 text-xl'>
-              Tiếp tục mua sắm
+            Continue shopping
             </Button>
           </Link>
         </div>
@@ -37,7 +37,7 @@ const CartScreen = () => {
               size='default'
               current={0}
               direction='horizontal'
-              items={[{ title: 'Giỏ hàng' }, { title: 'Thanh toán' }]}
+              items={[{ title: 'Cart' }, { title: 'Checkout' }]}
             />
           </div>
         </div>

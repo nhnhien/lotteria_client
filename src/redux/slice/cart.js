@@ -43,6 +43,7 @@ const cartSlice = createSlice({
       const { totalQuantity, totalPrice } = calculateCartTotals(state.items);
       state.total_quantity = totalQuantity;
       state.total_price = totalPrice;
+      state.discounted_total_price = totalPrice; // Add this
     },
 
     updateCart: (state, action) => {
@@ -52,16 +53,38 @@ const cartSlice = createSlice({
       state.discount_code = discount_code;
     },
 
+    // updateDiscount: (state, action) => {
+    //   state.discount_code = action.payload.discount_code;
+    //   state.items.map((item) => {
+    //     if (item.price > item.discounted_price) {
+    //       item.discount_type = action.payload.discount_type;
+    //       item.discount_value = action.payload.discount_value;
+    //     }
+    //   });
+    // },
     updateDiscount: (state, action) => {
       state.discount_code = action.payload.discount_code;
-      state.items.map((item) => {
-        if (item.price > item.discounted_price) {
-          item.discount_type = action.payload.discount_type;
-          item.discount_value = action.payload.discount_value;
+    
+      state.items = state.items.map((item) => {
+        const hasDiscount = item.price > item.discounted_price;
+        if (hasDiscount) {
+          return {
+            ...item,
+            discount_type: action.payload.discount_type,
+            discount_value: action.payload.discount_value,
+            discounted_price: item.price - action.payload.discount_value,
+          };
         }
+        return item;
       });
+    
+      state.discounted_total_price = state.items.reduce(
+        (total, item) =>
+          total + item.quantity * (item.discounted_price ?? item.price),
+        0
+      );
     },
-
+    
     removeDiscount: (state) => {
       state.discount_code = '';
       state.discounted_total_price = state.total_price;
@@ -73,16 +96,35 @@ const cartSlice = createSlice({
       }));
     },
 
+    // updateItemQuantity: (state, action) => {
+    //   const { id, quantity } = action.payload;
+    //   const existingItem = state.items.find((item) => item.id === id);
+    //   if (existingItem) {
+    //     existingItem.quantity = quantity;
+    //   }
+    //   const { totalQuantity, totalPrice } = calculateCartTotals(state.items);
+    //   state.total_quantity = totalQuantity;
+    //   state.total_price = totalPrice;
+    // },
     updateItemQuantity: (state, action) => {
       const { id, quantity } = action.payload;
       const existingItem = state.items.find((item) => item.id === id);
+    
       if (existingItem) {
         existingItem.quantity = quantity;
       }
+    
       const { totalQuantity, totalPrice } = calculateCartTotals(state.items);
       state.total_quantity = totalQuantity;
       state.total_price = totalPrice;
+    
+      state.discounted_total_price = state.items.reduce(
+        (total, item) =>
+          total + item.quantity * (item.discounted_price ?? item.price),
+        0
+      );
     },
+    
     updateNote: (state, action) => {
       state.note = action.payload;
     },

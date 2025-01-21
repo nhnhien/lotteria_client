@@ -9,7 +9,7 @@ import {
   updateItemQuantity,
   updateNote,
 } from '../../redux/slice/cart';
-
+import { formatCurrencyUSD } from '../../util/format';
 const CartItems = ({ cartItems }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const CartItems = ({ cartItems }) => {
     <div className='bg-white p-4 rounded shadow-md'>
       <div className='border-b pb-2 mb-4 flex items-center justify-between'>
         <h2 className='text-lg font-semibold '>
-          GIỎ HÀNG CỦA BẠN ({cartItems.length} sản phẩm)
+        Your Cart ({cartItems.length} Product)
         </h2>
         <div>
           <Button
@@ -47,7 +47,7 @@ const CartItems = ({ cartItems }) => {
             onClick={() => navigate('/')}
             className='text-red-500'
           >
-            Thêm sản phẩm
+            Add product
           </Button>
         </div>
       </div>
@@ -70,14 +70,14 @@ const CartItems = ({ cartItems }) => {
                 {item.discounted_price < item.price ? (
                   <>
                     <p className='text-red-500 text-base line-through'>
-                      {item.price} ₫
+                      {item.price} $
                     </p>
                     <p className='text-green-500 text-base ml-2'>
-                      {item.discounted_price} ₫
+                      {item.discounted_price} $
                     </p>
                   </>
                 ) : (
-                  <p className='text-red-500 text-base'>{item.price} ₫</p>
+                  <p className='text-red-500 text-base'>{formatCurrencyUSD(item.price)}</p>
                 )}
               </div>
             </div>
@@ -121,7 +121,7 @@ const CartItems = ({ cartItems }) => {
           rows={2}
           value={note}
           onChange={handleNoteChange}
-          placeholder='Ghi chú cho đơn hàng'
+          placeholder='Order notes'
           className='rounded'
         />
       </div>

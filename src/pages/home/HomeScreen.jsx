@@ -54,9 +54,20 @@ const HomeScreen = () => {
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <img src={slide.link} alt={`Slide ${slide.id}`} width='100%' />
+              <img
+                src={slide.link}
+                alt={`Slide ${slide.id}`}
+                style={{
+                  width: '80%',
+                  height: [1, 2, 3, 4].includes(slide.id) ? '562px' : 'auto',
+                  margin: '0 auto',
+                  display: 'block'
+                }}
+              />
             </SwiperSlide>
           ))}
+
+
         </Swiper>
       </div>
       <div className='container mx-auto'>
@@ -91,16 +102,6 @@ const HomeScreen = () => {
               </div>
             );
           })}
-
-        {/* <div className='pt-8'>
-          <div className='w-10'>
-            <Divider className='max-w-2' style={{ border: '1px red solid' }} />
-          </div>
-          <p className='text-xl font-semibold'>ƯU ĐÃI ĐẶC BIỆT</p>
-          <div className='pt-6'>
-            <ProductList category={''} />
-          </div>
-        </div> */}
 
         <SignInScreen />
         <SignUpScreen />

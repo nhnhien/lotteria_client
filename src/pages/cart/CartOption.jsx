@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Button, Input, message, Select, Switch } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  clearCart,
   selectCartDiscountedTotalPrice,
   selectCartItems,
   selectCartNote,
   selectCartTotalPrice,
   updateCart,
 } from '../../redux/slice/cart';
-import { formatCurrencyVND } from '../../util/format';
+import { formatCurrencyUSD, formatCurrencyVND } from '../../util/format';
 import CartDiscount from './CartDiscount';
 import { createOrder } from '../../service/order';
 import payment from '../../service/payment';
@@ -19,34 +20,37 @@ const CartOptions = () => {
   const { currentUser } = useAuth();
   const userId = currentUser.id;
   const cartItems = useSelector(selectCartItems);
+  console.log('🚀 ~ CartOptions ~ cartItems :', cartItems);
   const totalPrice = useSelector(selectCartTotalPrice);
   const discountedTotalPrice = useSelector(selectCartDiscountedTotalPrice);
   const note = useSelector(selectCartNote);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone_order, setPhone] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('vnpay');
 
   const handleContinue = async () => {
     if (!cartItems || cartItems.length === 0) {
-      return message.error('Giỏ hàng không có sản phẩm.');
+      return message.error('Your cart is empty.');
     }
-    if (!shippingAddress || !phone || !paymentMethod) {
-      return message.error('Vui lòng nhập đầy đủ thông tin.');
+    if (!shippingAddress || !phone_order || !paymentMethod) {
+      return message.error('Please enter all required information.');
     }
-
+    const final_price =
+      discountedTotalPrice > totalPrice ? totalPrice : discountedTotalPrice;
     const orderData = {
       userId,
-      totalPrice: discountedTotalPrice,
+      totalPrice: final_price * 25000,
       orderDetails: cartItems.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
         price: item.discounted_price,
       })),
       shippingAddress,
-      phone,
+      phone_order,
       paymentMethod,
       note,
     };
+    console.log("🚀 ~ handleContinue ~ orderData:", orderData)
 
     try {
       const orderRes = await createOrder(orderData);
@@ -62,30 +66,30 @@ const CartOptions = () => {
         if (paymentRes && paymentRes.success) {
           window.location.href = paymentRes.paymentUrl;
         } else {
-          message.error('Thanh toán không thành công, vui lòng thử lại.');
+          message.error('Payment failed, please try again.');
         }
       } else {
-        message.error('Tạo đơn hàng không thành công, vui lòng thử lại.');
+        message.error('Order creation failed, please try again.');
       }
     } catch (error) {
-      message.error('Đặt hàng thất bại, vui lòng thử lại.');
+      message.error('Order failed, please try again.');
     }
   };
 
   return (
     <div className='w-full bg-white p-6 rounded-lg shadow-lg mt-6 lg:mt-0 lg:ml-6'>
       <h3 className='text-xl font-semibold text-gray-700 mb-3'>
-        Thông tin giao hàng
+      Shipping information
       </h3>
 
       <div className='mb-6'>
         <div className='space-y-2 mb-2'>
           <label className='block text-md font-medium text-gray-600'>
-            Địa chỉ giao hàng
+          Shipping address
           </label>
           <Input.TextArea
             rows={2}
-            placeholder='Nhập địa chỉ giao hàng của bạn...'
+            placeholder='Enter your shipping address...'
             value={shippingAddress}
             onChange={(e) => setShippingAddress(e.target.value)}
             className='rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
@@ -94,32 +98,15 @@ const CartOptions = () => {
 
         <div className='space-y-2'>
           <label className='block text-md font-medium text-gray-600'>
-            Số điện thoại nhận hàng
+          Receiver's phone number
           </label>
           <Input
-            placeholder='Nhập số điện thoại của bạn...'
-            value={phone}
+            placeholder='Enter your phone number...'
+            value={phone_order}
+            type='text'
             onChange={(e) => setPhone(e.target.value)}
             className='rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
           />
-        </div>
-      </div>
-
-      <div className='border-t border-red-300 my-6'></div>
-      <div className='mb-3'>
-        <div className='space-y-2'>
-          <div className='flex justify-between items-center'>
-            <span className='text-md text-gray-600'>Lấy dụng cụ ăn uống</span>
-            <Switch defaultChecked />
-          </div>
-          <div className='flex justify-between items-center'>
-            <span className='text-md text-gray-600'>Lấy tương cà</span>
-            <Switch defaultChecked size='' />
-          </div>
-          <div className='flex justify-between items-center'>
-            <span className='text-md text-gray-600'>Lấy tương ớt</span>
-            <Switch defaultChecked />
-          </div>
         </div>
       </div>
 
@@ -130,21 +117,20 @@ const CartOptions = () => {
         </div>
         <div className='mb-6'>
           <label className='block text-md font-medium text-gray-600'>
-            Chọn phương thức thanh toán
-          </label>
+          Select payment method          </label>
           <Select
             value={paymentMethod}
             onChange={setPaymentMethod}
             defaultValue='credit_card'
             className='w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
-            placeholder='Chọn phương thức thanh toán'
+            placeholder='Select payment method'
           >
-            <Select.Option value='vnpay'>Ví VNPay</Select.Option>
-            <Select.Option value='cod'>Thanh toán khi nhận hàng</Select.Option>
+            <Select.Option value='vnpay'>VNPay wallet</Select.Option>
+            {/* <Select.Option value='cod'>Cash on delivery</Select.Option> */}
           </Select>
         </div>
         <div className='flex justify-between text-lg text-gray-700'>
-          <span>Tạm tính:</span>
+          <span>Subtotal:</span>
           <span
             className={`font-semibold ${
               discountedTotalPrice < totalPrice
@@ -152,14 +138,18 @@ const CartOptions = () => {
                 : ''
             }`}
           >
-            {formatCurrencyVND(totalPrice)}
+            {formatCurrencyUSD(totalPrice)}
           </span>
         </div>
         <div className='flex justify-between text-xl font-semibold text-gray-800 mt-2'>
-          <span>Tổng cộng:</span>
-          <span className='text-red-600'>
-            {formatCurrencyVND(discountedTotalPrice || totalPrice)}
-          </span>
+          <span>Total:</span>
+          {discountedTotalPrice < totalPrice ? (
+            <span className='text-red-600'>
+              {formatCurrencyUSD(discountedTotalPrice || totalPrice)}
+            </span>
+          ) : (
+            <span className='text-red-600'>{formatCurrencyUSD(totalPrice)}</span>
+          )}
         </div>
 
         <Button
@@ -168,7 +158,7 @@ const CartOptions = () => {
           size='large'
           onClick={handleContinue}
         >
-          Tiếp tục
+          Continue
         </Button>
       </div>
     </div>

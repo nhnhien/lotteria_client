@@ -219,7 +219,7 @@ const ManageCategory = () => {
                             <p className='text-gray-500'>
                               {product.description}
                             </p>
-                            <p className='font-bold text-red-500'>{`₫${product.price.toLocaleString()}`}</p>
+                            <p className='font-bold text-red-500'>{`$${product.price.toLocaleString()}`}</p>
                           </div>
                         </li>
                       ))

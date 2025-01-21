@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, requireAdmin }) => {
   const { isAdmin, isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
-    message.warning('Bạn cần đăng nhập để truy cập.');
+    message.warning('You need to log in to access.');
     return <Navigate to='/' state={{ openModal: true }} replace />;
   }
 

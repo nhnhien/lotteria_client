@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import useAuth from '../../hook/useAuth';
 import { getOrderByUser } from '../../service/order';
-import { formatCurrencyVND } from '../../util/format';
+import { formatCurrencyUSD, formatCurrencyVND } from '../../util/format';
 
 const { Title, Text } = Typography;
 
@@ -53,7 +53,9 @@ const OrderScreen = () => {
       </div>
     );
   }
-
+  const convertToUSD = (amountVND, exchangeRate = 25000) => {
+    return (amountVND / exchangeRate).toFixed(2);
+  };
   return (
     <div className='p-6 max-w-screen-lg mx-auto'>
       <Title level={2} className='text-center text-gray-800 mb-6'>
@@ -64,32 +66,52 @@ const OrderScreen = () => {
         size='large'
         dataSource={orders}
         renderItem={(order) => (
+          // <List.Item
+          //   key={order.id}
+          //   className='bg-pink-50 shadow-lg rounded-lg mb-6 hover:shadow-xl transition-shadow duration-300 ease-in-out'
+          //   extra={
+          //     <div>
+          //       {order.status === 'delivered' ? (
+          //         <CheckCircleOutlined
+          //           style={{ color: 'green', fontSize: '24px' }}
+          //         />
+          //       ) : (
+          //         <CloseCircleOutlined
+          //           style={{ color: 'red', fontSize: '24px' }}
+          //         />
+          //       )}
+          //     </div>
+          //   }
+          // >
           <List.Item
-            key={order.id}
-            className='bg-pink-50 shadow-lg rounded-lg mb-6 hover:shadow-xl transition-shadow duration-300 ease-in-out'
-            extra={
-              <div>
-                {order.status === 'delivered' ? (
-                  <CheckCircleOutlined
-                    style={{ color: 'green', fontSize: '24px' }}
-                  />
-                ) : (
-                  <CloseCircleOutlined
-                    style={{ color: 'red', fontSize: '24px' }}
-                  />
-                )}
-              </div>
-            }
-          >
+  key={order.id}
+  className={`shadow-lg rounded-lg mb-6 hover:shadow-xl transition-shadow duration-300 ease-in-out ${
+    order.deliveries[0]?.status === "delivered" ? "border-2 border-green-500 bg-green-50" : "bg-pink-50"
+  }`}
+  extra={
+    <div>
+      {order.deliveries[0]?.status === "delivered" ? (
+        <CheckCircleOutlined style={{ color: "green", fontSize: "24px" }} />
+      ) : (
+        <CloseCircleOutlined style={{ color: "red", fontSize: "24px" }} />
+      )}
+    </div>
+  }
+>
+
             <Card
               title={`Order #${order.id}`}
               bordered={false}
               className='w-full'
               style={{ padding: '6px' }}
               extra={
+                // <Text strong className='text-2xl text-gray-700'>
+                //   {formatCurrencyUSD(order.total_price)}
+                // </Text>
                 <Text strong className='text-2xl text-gray-700'>
-                  {formatCurrencyVND(order.total_price)}
-                </Text>
+  {convertToUSD(order.total_price)} USD
+</Text>
+
               }
             >
               <div className='flex justify-between mb-4'>
@@ -110,6 +132,9 @@ const OrderScreen = () => {
                   >
                     {order.payments[0].status}
                   </span>
+                  <span className='pl-5'> 
+                    Delivery:{order.deliveries[0].status}
+                  </span>
 
                   {['failed', 'pending'].includes(order.payments[0].status) && (
                     <Button
@@ -121,7 +146,7 @@ const OrderScreen = () => {
                       Repayment
                     </Button>
                   )}
-                  {(order.payments[0].status !== 'completed' ||
+                  {/* {(order.payments[0].status !== 'completed' ||
                     order.payments[0].status !== 'cancelled') && (
                     <Button
                       type='primary'
@@ -131,7 +156,9 @@ const OrderScreen = () => {
                     >
                       Cancel Order
                     </Button>
-                  )}
+                  )} */}
+                    {(order.payments[0].status !== 'completed' ||
+                    order.payments[0].status !== 'cancelled')}
                 </div>
                 <div className='text-sm text-gray-500'>
                   <Text>Placed on:</Text>{' '}
@@ -139,11 +166,36 @@ const OrderScreen = () => {
                 </div>
               </div>
 
-              <div>
-                <Text className='font-medium'>Note: </Text>
-                <span>{order.note || 'No additional notes'}</span>
-              </div>
+        {/* User Information */}
+        <div>
+          <Title level={5} className='text-gray-700'>
+            User Information:
+          </Title>
+          <div>
+            <Text className='font-medium'>Username: </Text>
+            <span>{order.user.username}</span>
+          </div>
+          <div>
+            <Text className='font-medium'>Phone: </Text>
+            <span>{order.user.phone}</span>
+          </div>
+          <div>
+            <Text className='font-medium'>Email: </Text>
+            <span>{order.user.email}</span>
+          </div>
+        </div>
 
+        {/* Order Note */}
+        <div>
+          <Text className='font-medium'>Note: </Text>
+          <span>{order.note || 'No additional notes'}</span>
+        </div>
+
+        {/* Delivery Address */}
+        <div>
+          <Text className='font-medium'>Address: </Text>
+          <span>{order.deliveries[0]?.address || 'No delivery address provided'}</span>
+        </div>
               <div className='mt-6'>
                 <Title level={5} className='text-gray-700'>
                   Order Details:
@@ -151,10 +203,17 @@ const OrderScreen = () => {
                 <List
                   dataSource={order.orderDetails}
                   renderItem={(detail) => (
+                    // <List.Item
+                    //   key={detail.product_id}
+                    //   className='bg-white rounded-lg shadow-md mb-2 p-2 hover:bg-gray-50 transition-colors duration-200 ease-in-out'
+                    // >
                     <List.Item
-                      key={detail.product_id}
-                      className='bg-white rounded-lg shadow-md mb-2 p-2 hover:bg-gray-50 transition-colors duration-200 ease-in-out'
-                    >
+  key={detail.product_id}
+  className={`rounded-lg shadow-md mb-2 p-2 transition-colors duration-300 ease-in-out ${
+    order.deliveries[0]?.status === "delivered" ? "bg-green-100" : "bg-white"
+  }`}
+>
+
                       <div className='flex items-center space-x-4'>
                         <img
                           src={detail.product.image || '/default-image.jpg'}
@@ -173,7 +232,7 @@ const OrderScreen = () => {
                           <Text className='font-semibold text-gray-500'>
                             {detail.quantity} x{' '}
                             <span className='text-red-500'>
-                              {formatCurrencyVND(detail.price)}
+                              {formatCurrencyUSD(detail.price)}
                             </span>
                           </Text>
                         </div>
@@ -187,13 +246,13 @@ const OrderScreen = () => {
         )}
       />
       <div className='text-center mt-8'>
-        <Button
+        {/* <Button
           type='primary'
           size='large'
           className='bg-blue-600 hover:bg-blue-700 transition duration-300 text-white'
         >
           View More Orders
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

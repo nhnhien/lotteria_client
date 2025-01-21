@@ -8,6 +8,7 @@ import { signIn } from '../../service/auth';
 import { loginSuccess } from '../../redux/slice/auth';
 import useAuth from '../../hook/useAuth';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../assets/images/quickchicken_logo.png';
 
 const SignInScreen = () => {
   const [email, setEmail] = useState('');
@@ -29,8 +30,8 @@ const SignInScreen = () => {
       if (result && result.success) {
         console.log('result', result);
         notification.success({
-          message: 'Đăng nhập thành công',
-          description: 'Bạn đã đăng nhập thành công!',
+          message: 'Login successful',
+          description: 'You have logged in successfully!',
         });
         dispatch(closeModal({ name: ModalTypes.SIGN_IN }));
         dispatch(loginSuccess({ ...result.user, token: result.token }));
@@ -40,9 +41,9 @@ const SignInScreen = () => {
       }
     } catch (error) {
       const messageError = error.response.data.message;
-      console.error('Lỗi đăng nhập:', messageError);
+      console.error('Login error:', messageError);
       notification.error({
-        message: 'Đăng nhập thất bại',
+        message: 'Login failed',
         description: messageError,
       });
     }
@@ -61,17 +62,17 @@ const SignInScreen = () => {
       >
         <div className='grid grid-cols-2 gap-3'>
           <div className='p-5'>
-            <h2 className='text-2xl font-bold text-center mb-6'>Đăng nhập</h2>
+            <h2 className='text-2xl font-bold text-center mb-6'>Sign In</h2>
             <div>
               <div className='mb-4'>
                 <label
                   htmlFor='phoneOrEmail'
                   className='text-base block text-gray-700'
                 >
-                  Số điện thoại/Email
+                  Phone number/Email
                 </label>
                 <Input
-                  placeholder='Số điện thoại/email'
+                  placeholder='Phone number/email'
                   className='focus:border-footer-second hover:border-footer-second h-10 mt-2 border-gray-300 border-2'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -82,10 +83,10 @@ const SignInScreen = () => {
                   htmlFor='phoneOrEmail'
                   className='text-base block text-gray-700'
                 >
-                  Mật khẩu
+                  Password
                 </label>
                 <Input
-                  placeholder='mật khẩu'
+                  placeholder='Password'
                   type='password'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -98,7 +99,7 @@ const SignInScreen = () => {
               onClick={handleSignIn}
               className='w-full bg-red-500 text-white p-2 rounded-lg mt-4 hover:bg-red-600'
             >
-              Tiếp tục
+              Continue
             </button>
             <div className='text-center mt-4'>
               <p
@@ -110,12 +111,12 @@ const SignInScreen = () => {
                   );
                 }}
               >
-                Chưa có tài khoản hãy đăng ký
+                Don't have an account? Sign up
               </p>
             </div>
-            <div className='text-center pt-4'>Hoặc đăng nhập bằng</div>
+            {/* <div className='text-center pt-4'>Or sign in with</div> */}
 
-            <div className='flex justify-center mt-8 space-x-4'>
+            {/* <div className='flex justify-center mt-8 space-x-4'>
               <Button
                 icon={
                   <img src='https://www.lotteria.vn/grs-static/images/icon-fb.svg' />
@@ -132,16 +133,15 @@ const SignInScreen = () => {
               >
                 Google
               </Button>
-            </div>
+            </div> */}
           </div>
-          <div className='rounded-r-lg'>
-            <img
-              src='https://www.lotteria.vn/grs-static/images/login-banner.jpg'
-              alt=''
-              width='100%'
-              className='rounded-r-lg'
-            />
-          </div>
+          <div className='rounded-r-lg flex justify-center items-center'>
+  <img
+    src={logo}
+    alt='QuickChicken Logo'
+    className='w-full max-w-md lg:max-w-lg' 
+  />
+</div>
         </div>
       </Modal>
     </div>

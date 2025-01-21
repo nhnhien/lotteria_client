@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../../config/axios.config';
+import { Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '../../redux/slice/cart';
 
 const PaymentScreen = () => {
   const location = useLocation();
+  const dispatch = useDispatch()
+  
+
   const queryParams = new URLSearchParams(location.search);
 
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -82,13 +88,18 @@ const PaymentScreen = () => {
         setMessage('Error processing payment');
       });
   }, [location, queryParams]);
+   const navigate =useNavigate()
 
   const getStatusMessage = () => {
     switch (paymentStatus) {
       case 'success':
+        dispatch(clearCart())
         return (
           <div className='text-green-500 font-semibold'>
             Your payment was successful! Thank you for your purchase.
+            <Button onClick={()=>{
+              navigate('/order')
+              }}>View Order</Button>
           </div>
         );
       case 'failed':

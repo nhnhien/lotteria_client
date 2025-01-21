@@ -13,8 +13,10 @@ const UserModal = ({ onOk }) => {
 
   useEffect(() => {
     if (content) {
-      form.setFieldsValue(content);
-    } else {
+      form.setFieldsValue({
+        ...content,
+        password: '******', // Điền mật khẩu gốc từ API
+      });    } else {
       form.resetFields();
     }
   }, [content, form]);
@@ -64,17 +66,26 @@ const UserModal = ({ onOk }) => {
           <Input placeholder='Enter phone' />
         </Form.Item>
         <Form.Item
-          type='password'
-          label='Password'
-          name='password'
-          rules={[{ required: true, message: 'Please input the password!' }]}
-        >
-          <Input placeholder='Enter phone' />
-        </Form.Item>
+  label="Password"
+  name="password"
+  rules={[
+    { required: !content, message: 'Please input the password!' },
+  ]}
+>
+  <Input
+    placeholder="Enter password"
+    type="password" // Hiển thị dạng dấu chấm đen
+    disabled={!!content} // Không cho phép chỉnh sửa trong chế độ chỉnh sửa
+  />
+</Form.Item>
+
+
+
+
 
         <Form.Item
           label='Role'
-          name='roleId'
+          name='role_id'
           rules={[{ required: true, message: 'Please select the role!' }]}
         >
           <Select>

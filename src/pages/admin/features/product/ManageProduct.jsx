@@ -12,7 +12,7 @@ import { closeModal, openModal } from '../../../../redux/slice/modal';
 import { ModalTypes } from '../../../../constant/modal';
 import moment from 'moment';
 import ProductModal from './ProductModal';
-import { formatCurrencyVND } from '../../../../util/format';
+import { formatCurrencyUSD, formatCurrencyVND } from '../../../../util/format';
 
 const ManageProduct = () => {
   const dispatch = useDispatch();
@@ -88,7 +88,7 @@ const ManageProduct = () => {
         const imageFile = formData.get('image');
         if (!imageFile) {
           console.error('No image file selected');
-          message.error('Vui lòng chọn ảnh sản phẩm!');
+          message.error('Please select a product image!');
           return;
         }
         const newProduct = await createProduct(formData);
@@ -106,7 +106,7 @@ const ManageProduct = () => {
       dispatch(closeModal({ name: ModalTypes.PRODUCT }));
     } catch (error) {
       console.log(error);
-      message.error('Có gì đó sai sai ');
+      message.error('Something went wrong');
     }
   };
 
@@ -148,7 +148,7 @@ const ManageProduct = () => {
       key: 'price',
       sorter: (a, b) => a.price - b.price,
       render: (price) => (
-        <p className='text-red-600 font-medium'>{formatCurrencyVND(price)}</p>
+        <p className='text-red-600 font-medium'>{formatCurrencyUSD(price)}</p>
       ),
     },
     {
